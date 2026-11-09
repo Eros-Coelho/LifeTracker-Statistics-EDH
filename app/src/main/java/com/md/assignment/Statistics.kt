@@ -26,6 +26,7 @@ class Statistics : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+//            design choice same as main activity
             Box (modifier = Modifier.fillMaxSize()) {
                 Column (
                     modifier = Modifier

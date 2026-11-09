@@ -45,6 +45,7 @@ class LifeTracker : ComponentActivity() {
             val player3Life = remember {mutableIntStateOf(40)}
             val player4Life = remember {mutableIntStateOf(40)}
 
+//            no box on this activity because I needed a specific layout for the life tracker itself
             Column (
                 modifier = Modifier.fillMaxSize()
             ){
@@ -59,8 +60,9 @@ class LifeTracker : ComponentActivity() {
                         .weight(1f)
                         .rotate(90f)
                     ) {
+//                        calling out the function PlayerCounter and assigning individual players' life totals to them
                         PlayerCounter("Player 1", player1Life.intValue, Modifier.weight(1f)) {
-                            player1Life.intValue = it
+                            player1Life.intValue = it //callback from PlayerCounter and updates player 1's state
                         }
                     }
                     Column(modifier = Modifier

@@ -26,8 +26,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+//            box to make it so the buttons are shown in the centre of the screen for now
+//            will probably change the centering when I do these pages on future milestones
             Box (modifier = Modifier.fillMaxSize()) {
-                Column(
+                Column( //columns with buttons linking the different activities, but only relevant ones
                     modifier = Modifier
                         .align(Alignment.Center)
                         .offset(y = 150.dp),
