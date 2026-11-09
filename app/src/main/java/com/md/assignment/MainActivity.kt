@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.offset
+import android.net.Uri
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +48,15 @@ class MainActivity : ComponentActivity() {
                         startActivity(intent)
                     }) {
                         Text("View Statistics")
+                    }
+                    Button(onClick = {
+                        val intent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("https://edhrec.com/commanders")
+                        )
+                        startActivity(intent)
+                    }){
+                        Text("Check Out the Most Popular Commanders!")
                     }
                 }
             }
