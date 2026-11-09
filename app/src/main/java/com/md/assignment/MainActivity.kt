@@ -21,6 +21,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.offset
 import android.net.Uri
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.ui.text.style.TextAlign
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +51,7 @@ class MainActivity : ComponentActivity() {
                     }) {
                         Text("View Statistics")
                     }
+//                    button leading to the EDHREC website, a popular site to see best and most used cards in the game
                     Button(onClick = {
                         val intent = Intent(
                             Intent.ACTION_VIEW,
@@ -58,6 +61,13 @@ class MainActivity : ComponentActivity() {
                     }){
                         Text("Check Out the Most Popular Commanders!")
                     }
+//                    some banter specific to players of the game
+                    Text("Remember")
+                    Text(
+                        text = "If your commander is in the Top 100 on EDHREC, you can't complain when people say you are the threat!",
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
         }

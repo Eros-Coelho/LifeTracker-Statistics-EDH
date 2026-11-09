@@ -34,8 +34,22 @@ class LifeTracker : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent {
 
+//        retrieving player names from game setup using getStringExtra
+        val player1Name =
+            intent.getStringExtra("PLAYER_1") ?:
+            "Player 1"
+        val player2Name =
+            intent.getStringExtra("PLAYER_2") ?:
+            "Player 2"
+        val player3Name =
+            intent.getStringExtra("PLAYER_3") ?:
+            "Player 3"
+        val player4Name =
+            intent.getStringExtra("PLAYER_4") ?:
+            "Player 4"
+
+        setContent {
             //vals for all values that will be changed during a game
             //using one different val for each player's life total to make it so a future feature can check life totals
             //and automatically declare a winner based on who has life above zero when the game ends
@@ -49,6 +63,7 @@ class LifeTracker : ComponentActivity() {
             Column (
                 modifier = Modifier.fillMaxSize()
             ){
+//                uses 3 rows for players 1 and 2, a narrow row in the middle for option buttons, then another row at the bottom for players 3 and 4
                 Row (
                     modifier = Modifier
                         .fillMaxWidth()
@@ -61,7 +76,8 @@ class LifeTracker : ComponentActivity() {
                         .rotate(90f)
                     ) {
 //                        calling out the function PlayerCounter and assigning individual players' life totals to them
-                        PlayerCounter("Player 1", player1Life.intValue, Modifier.weight(1f)) {
+//                        assigns names for players based on names provided in game set up
+                        PlayerCounter(player1Name, player1Life.intValue, Modifier.weight(1f)) {
                             player1Life.intValue = it //callback from PlayerCounter and updates player 1's state
                         }
                     }
@@ -69,7 +85,7 @@ class LifeTracker : ComponentActivity() {
                         .fillMaxWidth()
                         .weight(1f)
                         .rotate(270f)) {
-                        PlayerCounter("Player 2", player2Life.intValue, Modifier.weight(1f)) {
+                        PlayerCounter(player2Name, player2Life.intValue, Modifier.weight(1f)) {
                             player2Life.intValue = it
                         }
                     }
@@ -104,12 +120,14 @@ class LifeTracker : ComponentActivity() {
                         .fillMaxWidth()
                         .weight(1f)
                 ) {
+//                    again, individual columns so they can rotate independently
                     Column(modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
                         .rotate(90f)
                     ){
-                        PlayerCounter("Player 3", player3Life.intValue, Modifier.weight(1f)){
+//                        same logic as players 1 and 2
+                        PlayerCounter(player3Name, player3Life.intValue, Modifier.weight(1f)){
                             player3Life.intValue = it
                         }
                     }
@@ -117,7 +135,7 @@ class LifeTracker : ComponentActivity() {
                         .fillMaxWidth()
                         .weight(1f)
                         .rotate(270f)) {
-                            PlayerCounter("Player 4", player4Life.intValue, Modifier.weight(1f)) {
+                            PlayerCounter(player4Name, player4Life.intValue, Modifier.weight(1f)) {
                                 player4Life.intValue = it
                             }
                     }
