@@ -31,12 +31,14 @@ class GameSetUp : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent { //design choice same as main activity
+        setContent {
+//            creating 4 variables with mutable state to store player names and later pass them on to life tracker
             var player1Name by remember{mutableStateOf("")}
             var player2Name by remember{mutableStateOf("")}
             var player3Name by remember{mutableStateOf("")}
             var player4Name by remember{mutableStateOf("")}
 
+//            box to keep everything in the centre
             Box (modifier = Modifier.fillMaxSize()) {
                 Column (
                     modifier = Modifier
@@ -44,6 +46,7 @@ class GameSetUp : ComponentActivity() {
                         .offset(y = 150.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+//                    text fields for users to enter players' names
                     Text("Game Set Up")
                     TextField(
                         value = player1Name,
@@ -66,6 +69,7 @@ class GameSetUp : ComponentActivity() {
                         label = {Text("Player 4")}
                     )
 
+//                    button to start game takes user to life tracker and uses intent to pass on the names the user entered
                     Button(onClick = {
                         val intent = Intent(this@GameSetUp, LifeTracker::class.java)
 
