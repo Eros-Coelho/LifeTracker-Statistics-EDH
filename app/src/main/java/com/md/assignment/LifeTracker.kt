@@ -74,7 +74,7 @@ class LifeTracker : ComponentActivity() {
                     ) {
 //                        calling out the function PlayerCounter and assigning individual players' life totals to them
 //                        assigns names for players based on names provided in game set up
-                        PlayerCounter(player1Name ?: "Player 1", player1Life.intValue, Modifier.weight(1f)) {
+                        PlayerCounter(player1Name, player1Life.intValue, Modifier.weight(1f)) {
                             player1Life.intValue = it //callback from PlayerCounter and updates player 1's state
                         }
                     }
@@ -82,7 +82,7 @@ class LifeTracker : ComponentActivity() {
                         .fillMaxWidth()
                         .weight(1f)
                         .rotate(270f)) {
-                        PlayerCounter(player2Name ?: "Player 2", player2Life.intValue, Modifier.weight(1f)) {
+                        PlayerCounter(player2Name, player2Life.intValue, Modifier.weight(1f)) {
                             player2Life.intValue = it
                         }
                     }
@@ -124,7 +124,7 @@ class LifeTracker : ComponentActivity() {
                         .rotate(90f)
                     ){
 //                        same logic as players 1 and 2
-                        PlayerCounter(player3Name ?: "Player 3", player3Life.intValue, Modifier.weight(1f)){
+                        PlayerCounter(player3Name, player3Life.intValue, Modifier.weight(1f)){
                             player3Life.intValue = it
                         }
                     }
@@ -132,7 +132,7 @@ class LifeTracker : ComponentActivity() {
                         .fillMaxWidth()
                         .weight(1f)
                         .rotate(270f)) {
-                            PlayerCounter(player4Name ?: "Player 4", player4Life.intValue, Modifier.weight(1f)) {
+                            PlayerCounter(player4Name, player4Life.intValue, Modifier.weight(1f)) {
                                 player4Life.intValue = it
                             }
                     }
