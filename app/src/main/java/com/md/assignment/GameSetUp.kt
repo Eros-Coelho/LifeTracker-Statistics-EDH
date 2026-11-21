@@ -26,11 +26,27 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.*
 import androidx.compose.material3.TextField
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorManager
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
 
 class GameSetUp : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+
+//        testing to see if accelerometer is working
+        if (accelerometer != null) {
+            println("Accelerometer working") //it is, shows on Logcat
+        } else {
+            println("Not working :(")
+        }
+
         setContent {
 //            creating 4 variables with mutable state to store player names and later pass them on to life tracker
             var player1Name by remember{mutableStateOf("")}
