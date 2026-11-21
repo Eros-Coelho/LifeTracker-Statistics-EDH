@@ -31,14 +31,46 @@ import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
+import kotlin.math.sqrt
 
-class GameSetUp : ComponentActivity() {
+class GameSetUp : ComponentActivity(), SensorEventListener {
+
+    private val threshold = 15f
+
+    override fun onSensorChanged(event: SensorEvent?) {
+
+        if (event != null) {
+            val x = event.values[0]
+            val y = event.values[1]
+            val z = event.values[2]
+
+            val acceleration = sqrt(x * x + y * y + z * z)
+            println("Acceleration: $acceleration")
+
+            if (acceleration > threshold) {
+                println("Shaking movement detected")
+            }
+        }
+    }
+
+//    no need for accuracy, so this will stay empty
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         val sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+
+
+        if (accelerometer != null) {
+            sensorManager.registerListener(
+                this,
+                accelerometer,
+                SensorManager.SENSOR_DELAY_NORMAL
+            )
+        }
 
 //        testing to see if accelerometer is working
         if (accelerometer != null) {
