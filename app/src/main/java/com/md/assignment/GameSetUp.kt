@@ -35,20 +35,50 @@ import kotlin.math.sqrt
 
 class GameSetUp : ComponentActivity(), SensorEventListener {
 
-    private val threshold = 15f
+    private val threshold = 15f //threshold to detect a substantial shake
+    private var lastTimeShook = 0L //keeps last time the device was shaken
+    private val cooldown = 2000L // 2 seconds cooldown to prevent shaking being detected over and over again
+    private var shakeDetected by mutableStateOf(false) //keep track if a shake has been already detected or not
+    private var firstPlayer by mutableStateOf("") //storing player to go first
+
+    //    creating 4 variables with mutable state to store player names and later pass them on to the life tracker
+    private var player1Name by mutableStateOf("")
+    private var player2Name by mutableStateOf("")
+    private var player3Name by mutableStateOf("")
+    private var player4Name by mutableStateOf("")
 
     override fun onSensorChanged(event: SensorEvent?) {
 
-        if (event != null) {
-            val x = event.values[0]
+        if (event != null) { //triggers whenever an event happens
+            val x = event.values[0] //getting x, y and z axis for sensor
             val y = event.values[1]
             val z = event.values[2]
 
-            val acceleration = sqrt(x * x + y * y + z * z)
+            val acceleration = sqrt(x * x + y * y + z * z) //calculating acceleration
             println("Acceleration: $acceleration")
 
-            if (acceleration > threshold) {
+            val currentTime = System.currentTimeMillis()
+
+//            println("X: $x, Y: $y, Z: $z")
+
+//            after detecting a shake, it will ignore other shake detections for 2 seconds
+            if (acceleration > threshold && currentTime - lastTimeShook > cooldown && !shakeDetected) {
+                lastTimeShook = currentTime //updates last time shook to current time whenever a shake is detected
+                shakeDetected = true //changes to shake detected if a shake is detected
+
+                val players = listOf ( //creating a list of input players
+                    player1Name,
+                    player2Name,
+                    player3Name,
+                    player4Name
+                ).filter {it.isNotBlank()} //filtering it to avoid blank names
+
+                if (players.isNotEmpty()) { //if none of the players are empty spaces, selects a random player to go first
+                    firstPlayer = players.random()
+                }
+
                 println("Shaking movement detected")
+                println("$firstPlayer goes first!")
             }
         }
     }
@@ -80,12 +110,6 @@ class GameSetUp : ComponentActivity(), SensorEventListener {
         }
 
         setContent {
-//            creating 4 variables with mutable state to store player names and later pass them on to life tracker
-            var player1Name by remember{mutableStateOf("")}
-            var player2Name by remember{mutableStateOf("")}
-            var player3Name by remember{mutableStateOf("")}
-            var player4Name by remember{mutableStateOf("")}
-
 //            box to keep everything in the centre
             Box (modifier = Modifier.fillMaxSize()) {
                 Column (
@@ -116,6 +140,30 @@ class GameSetUp : ComponentActivity(), SensorEventListener {
                         onValueChange = {player4Name = it},
                         label = {Text("Player 4")}
                     )
+
+                    if (shakeDetected) { //if shake is detected and there's already a firstPlayer, show the name on screen
+                        if (firstPlayer.isNotBlank()){
+                            Text("$firstPlayer goes first!")
+                        } else { //error message saying no player names were entered before shaking
+                            Text("No player names entered!")
+                        }
+                    }
+
+                    Button(onClick = {
+                        val players = listOf (
+                            player1Name,
+                            player2Name,
+                            player3Name,
+                            player4Name
+                        ).filter {it.isNotBlank()}
+
+                        if (players.isNotEmpty()){
+                            firstPlayer = players.random()
+                        }
+                        shakeDetected = true
+                    }) {
+                        Text("Test Shake detection")
+                    }
 
 //                    button to start game takes user to life tracker and uses intent to pass on the names the user entered
                     Button(onClick = {
