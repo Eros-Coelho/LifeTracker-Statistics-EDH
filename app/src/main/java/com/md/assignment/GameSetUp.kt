@@ -32,12 +32,15 @@ import android.hardware.SensorManager
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import kotlin.math.sqrt
+import androidx.compose.material3.AlertDialog
+import androidx.compose.foundation.layout.Arrangement
 
 class GameSetUp : ComponentActivity(), SensorEventListener {
 
     private val threshold = 15f //threshold to detect a substantial shake
     private var lastTimeShook = 0L //keeps last time the device was shaken
-    private val cooldown = 2000L // 2 seconds cooldown to prevent shaking being detected over and over again
+    private val cooldown =
+        2000L // 2 seconds cooldown to prevent shaking being detected over and over again
     private var shakeDetected by mutableStateOf(false) //keep track if a shake has been already detected or not
     private var firstPlayer by mutableStateOf("") //storing player to go first
 
@@ -63,15 +66,16 @@ class GameSetUp : ComponentActivity(), SensorEventListener {
 
 //            after detecting a shake, it will ignore other shake detections for 2 seconds
             if (acceleration > threshold && currentTime - lastTimeShook > cooldown && !shakeDetected) {
-                lastTimeShook = currentTime //updates last time shook to current time whenever a shake is detected
+                lastTimeShook =
+                    currentTime //updates last time shook to current time whenever a shake is detected
                 shakeDetected = true //changes to shake detected if a shake is detected
 
-                val players = listOf ( //creating a list of input players
+                val players = listOf( //creating a list of input players
                     player1Name,
                     player2Name,
                     player3Name,
                     player4Name
-                ).filter {it.isNotBlank()} //filtering it to avoid blank names
+                ).filter { it.isNotBlank() } //filtering it to avoid blank names
 
                 if (players.isNotEmpty()) { //if none of the players are empty spaces, selects a random player to go first
                     firstPlayer = players.random()
@@ -83,7 +87,7 @@ class GameSetUp : ComponentActivity(), SensorEventListener {
         }
     }
 
-//    no need for accuracy, so this will stay empty
+    //    no need for accuracy, so this will stay empty
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,9 +114,12 @@ class GameSetUp : ComponentActivity(), SensorEventListener {
         }
 
         setContent {
+
+            var showShakeDialog by remember { mutableStateOf(false) } //variable to show pop up notification when needed
+
 //            box to keep everything in the centre
-            Box (modifier = Modifier.fillMaxSize()) {
-                Column (
+            Box(modifier = Modifier.fillMaxSize()) {
+                Column(
                     modifier = Modifier
                         .align(Alignment.Center)
                         .offset(y = 150.dp),
@@ -122,27 +129,27 @@ class GameSetUp : ComponentActivity(), SensorEventListener {
                     Text("Game Set Up")
                     TextField(
                         value = player1Name,
-                        onValueChange = {player1Name = it},
-                        label = {Text("Player 1")}
+                        onValueChange = { player1Name = it },
+                        label = { Text("Player 1") }
                     )
                     TextField(
                         value = player2Name,
-                        onValueChange = {player2Name = it},
-                        label = {Text("Player 2")}
+                        onValueChange = { player2Name = it },
+                        label = { Text("Player 2") }
                     )
                     TextField(
                         value = player3Name,
-                        onValueChange = {player3Name = it},
-                        label = {Text("Player 3")}
+                        onValueChange = { player3Name = it },
+                        label = { Text("Player 3") }
                     )
                     TextField(
                         value = player4Name,
-                        onValueChange = {player4Name = it},
-                        label = {Text("Player 4")}
+                        onValueChange = { player4Name = it },
+                        label = { Text("Player 4") }
                     )
 
                     if (shakeDetected) { //if shake is detected and there's already a firstPlayer, show the name on screen
-                        if (firstPlayer.isNotBlank()){
+                        if (firstPlayer.isNotBlank()) {
                             Text("$firstPlayer goes first!")
                         } else { //error message saying no player names were entered before shaking
                             Text("No player names entered!")
@@ -150,14 +157,14 @@ class GameSetUp : ComponentActivity(), SensorEventListener {
                     }
 
                     Button(onClick = {
-                        val players = listOf (
+                        val players = listOf(
                             player1Name,
                             player2Name,
                             player3Name,
                             player4Name
-                        ).filter {it.isNotBlank()}
+                        ).filter { it.isNotBlank() }
 
-                        if (players.isNotEmpty()){
+                        if (players.isNotEmpty()) {
                             firstPlayer = players.random()
                         }
                         shakeDetected = true
@@ -165,19 +172,14 @@ class GameSetUp : ComponentActivity(), SensorEventListener {
                         Text("Test Shake detection")
                     }
 
-//                    button to start game takes user to life tracker and uses intent to pass on the names the user entered
                     Button(onClick = {
-                        val intent = Intent(this@GameSetUp, LifeTracker::class.java)
-
-                        intent.putExtra("PLAYER_1", player1Name)
-                        intent.putExtra("PLAYER_2", player2Name)
-                        intent.putExtra("PLAYER_3", player3Name)
-                        intent.putExtra("PLAYER_4", player4Name)
-
-                        startActivity(intent)
+                        shakeDetected = false
+                        showShakeDialog = true
+                        firstPlayer = ""
                     }) {
                         Text("Start")
                     }
+
                     Button(onClick = {
                         val intent = Intent(this@GameSetUp, MainActivity::class.java)
                         startActivity(intent)
@@ -185,6 +187,73 @@ class GameSetUp : ComponentActivity(), SensorEventListener {
                         Text("Back")
                     }
                 }
+            }
+            if (showShakeDialog) { //showing pop up window
+                AlertDialog(
+                    onDismissRequest = { //dismissing request
+                        showShakeDialog = false
+                        shakeDetected = false
+                        firstPlayer = ""
+                    },
+                    title = {
+                        Text("Choose first player")
+                    },
+                    text = {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            if (shakeDetected) { //if shaken and no player has been selected to go first, select a player to go first
+                                if (firstPlayer.isNotBlank()) {
+                                    Text("$firstPlayer goes first!")
+                                } else {
+                                    Text("No player names entered!") //otherwise tell the user no player names have been entered
+                                }
+                            } else { //shake not detected yet
+                                Text("Shake your phone to choose who goes first!")
+                            }
+
+                            Button(onClick = {
+                                val players = listOf(
+                                    player1Name,
+                                    player2Name,
+                                    player3Name,
+                                    player4Name
+                                ).filter { it.isNotBlank() }
+
+                                if (players.isNotEmpty()) {
+                                    firstPlayer = players.random()
+                                    shakeDetected = true
+                                }
+                            }) {
+                                Text("Simulate Shaking")
+                            }
+                        }
+                    },
+                    //                    button to start the game after players names were entered and first player was chosen
+                    confirmButton = {
+                        Button(onClick = {
+                            val intent = Intent(this@GameSetUp, LifeTracker::class.java)
+
+                            intent.putExtra("PLAYER_1", player1Name)
+                            intent.putExtra("PLAYER_2", player2Name)
+                            intent.putExtra("PLAYER_3", player3Name)
+                            intent.putExtra("PLAYER_4", player4Name)
+
+                            startActivity(intent)
+                        }) {
+                            Text("Start the Game")
+                        }
+                    },
+                    dismissButton = { //dismiss button, resets the
+                        Button(onClick = {
+                            showShakeDialog = false
+                            shakeDetected = false
+                            firstPlayer = ""
+                        }) {
+                            Text("Cancel")
+                        }
+                    }
+                )
             }
         }
     }

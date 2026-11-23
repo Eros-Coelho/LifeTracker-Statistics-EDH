@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
         setContent {
 //            box to make it so the buttons are shown in the centre of the screen for now
 //            will probably change the centering when I do these pages on future milestones
-            Box (modifier = Modifier.fillMaxSize()) {
+            Box(modifier = Modifier.fillMaxSize()) {
                 Column( //columns with buttons linking the different activities, but only relevant ones
                     modifier = Modifier
                         .align(Alignment.Center)
@@ -58,7 +58,7 @@ class MainActivity : ComponentActivity() {
                             Uri.parse("https://edhrec.com/commanders")
                         )
                         startActivity(intent)
-                    }){
+                    }) {
                         Text("Check Out the Most Popular Commanders!")
                     }
 //                    some banter specific to players of the game
