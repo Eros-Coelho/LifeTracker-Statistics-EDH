@@ -229,15 +229,18 @@ class GameSetUp : ComponentActivity(), SensorEventListener {
                             }
                         }
                     },
-                    //                    button to start the game after players names were entered and first player was chosen
+//                    button to start the game after players names were entered and first player was chosen
                     confirmButton = {
                         Button(onClick = {
                             val intent = Intent(this@GameSetUp, LifeTracker::class.java)
 
+//                            passing on player names to life tracker activity
                             intent.putExtra("PLAYER_1", player1Name)
                             intent.putExtra("PLAYER_2", player2Name)
                             intent.putExtra("PLAYER_3", player3Name)
                             intent.putExtra("PLAYER_4", player4Name)
+
+                            intent.putExtra("FIRST_PLAYER", firstPlayer) //passing on first player to life tracker
 
                             startActivity(intent)
                         }) {

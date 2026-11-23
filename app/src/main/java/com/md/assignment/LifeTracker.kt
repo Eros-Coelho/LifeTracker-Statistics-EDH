@@ -37,58 +37,67 @@ class LifeTracker : ComponentActivity() {
 
 //        retrieving player names from game setup using getStringExtra
 //        ensures that if text fields are left blank the app shows "Player N" instead of blank
-        val player1Name =
-            intent.getStringExtra("PLAYER_1")?.ifBlank{"Player 1"}?: "Player 1"
-        val player2Name =
-            intent.getStringExtra("PLAYER_2")?.ifBlank{"Player 2"}?: "Player 2"
-        val player3Name =
-            intent.getStringExtra("PLAYER_3")?.ifBlank{"Player 3"}?: "Player 3"
-        val player4Name =
-            intent.getStringExtra("PLAYER_4")?.ifBlank{"Player 4"}?: "Player 4"
+        val player1Name = intent.getStringExtra("PLAYER_1")?.ifBlank { "Player 1" } ?: "Player 1"
+        val player2Name = intent.getStringExtra("PLAYER_2")?.ifBlank { "Player 2" } ?: "Player 2"
+        val player3Name = intent.getStringExtra("PLAYER_3")?.ifBlank { "Player 3" } ?: "Player 3"
+        val player4Name = intent.getStringExtra("PLAYER_4")?.ifBlank { "Player 4" } ?: "Player 4"
+
+        val firstPlayer = intent.getStringExtra("FIRST_PLAYER") ?: ""
 
         setContent {
             //vals for all values that will be changed during a game
             //using one different val for each player's life total to make it so a future feature can check life totals
             //and automatically declare a winner based on who has life above zero when the game ends
-            val round = remember{mutableIntStateOf(0)}
-            val player1Life = remember {mutableIntStateOf(40)}
-            val player2Life = remember {mutableIntStateOf(40)}
-            val player3Life = remember {mutableIntStateOf(40)}
-            val player4Life = remember {mutableIntStateOf(40)}
+            val round = remember { mutableIntStateOf(0) }
+            val player1Life = remember { mutableIntStateOf(40) }
+            val player2Life = remember { mutableIntStateOf(40) }
+            val player3Life = remember { mutableIntStateOf(40) }
+            val player4Life = remember { mutableIntStateOf(40) }
 
 //            no box on this activity because I needed a specific layout for the life tracker itself
-            Column (
+            Column(
                 modifier = Modifier.fillMaxSize()
-            ){
+            ) {
 //                uses 3 rows for players 1 and 2, a narrow row in the middle for option buttons, then another row at the bottom for players 3 and 4
-                Row (
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
                 ) {
                     //create columns inside rows so they can rotate properly and every player can see their own life total without issues
-                    Column(modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                        .rotate(90f)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .rotate(90f)
                     ) {
 //                        calling out the function PlayerCounter and assigning individual players' life totals to them
 //                        assigns names for players based on names provided in game set up
-                        PlayerCounter(player1Name, player1Life.intValue, Modifier.weight(1f)) {
-                            player1Life.intValue = it //callback from PlayerCounter and updates player 1's state
+                        PlayerCounter (
+                            if (player1Name == firstPlayer) "$player1Name \uD83D\uDC51" else player1Name,
+                            player1Life.intValue,
+                            Modifier.weight(1f)
+                        ) {
+                            player1Life.intValue = it
                         }
                     }
-                    Column(modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                        .rotate(270f)) {
-                        PlayerCounter(player2Name, player2Life.intValue, Modifier.weight(1f)) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .rotate(270f)
+                    ) {
+                        PlayerCounter (
+                            if (player2Name == firstPlayer) "$player2Name \uD83D\uDC51" else player2Name,
+                            player2Life.intValue,
+                            Modifier.weight(1f)
+                        ) {
                             player2Life.intValue = it
                         }
                     }
                 }
                 //small row in the middle for buttons to leave game and round count
-                Row (
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(0.15f),
@@ -97,44 +106,55 @@ class LifeTracker : ComponentActivity() {
                 ) {
                     Button(onClick = { //ends current game and won't be added to statistics, inconclusive result
                         finish()
-                    }){
+                    }) {
                         Text("Main Menu") //will add a "are you sure?" option later before ending the game
                     }
                     Button(onClick = { //increases round count for both players and for statistics later
                         round.intValue++
-                    }){
+                    }) {
                         Text("New Round")
                     }
 
                     Text(text = round.intValue.toString())
 
-                    Button(onClick = {}){ //empty for now, will add functionality to it later
+                    Button(onClick = {}) { //empty for now, will add functionality to it later
                         Text("End Game")
                     }
                 }
-                Row ( //same logic and layout from the first row with the two other players
+                Row( //same logic and layout from the first row with the two other players
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
                 ) {
 //                    again, individual columns so they can rotate independently
-                    Column(modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                        .rotate(90f)
-                    ){
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .rotate(90f)
+                    ) {
 //                        same logic as players 1 and 2
-                        PlayerCounter(player3Name, player3Life.intValue, Modifier.weight(1f)){
+                        PlayerCounter (
+                            if (player3Name == firstPlayer) "$player3Name \uD83D\uDC51" else player3Name,
+                            player3Life.intValue,
+                            Modifier.weight(1f)
+                        ) {
                             player3Life.intValue = it
                         }
                     }
-                    Column(modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                        .rotate(270f)) {
-                            PlayerCounter(player4Name, player4Life.intValue, Modifier.weight(1f)) {
-                                player4Life.intValue = it
-                            }
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .rotate(270f)
+                    ) {
+                        PlayerCounter (
+                            if (player4Name == firstPlayer) "$player4Name \uD83D\uDC51" else player4Name,
+                            player4Life.intValue,
+                            Modifier.weight(1f)
+                        ) {
+                            player4Life.intValue = it
+                        }
                     }
                 }
             }
@@ -143,13 +163,20 @@ class LifeTracker : ComponentActivity() {
 }
 
 @Composable
-fun PlayerCounter(playerName: String, lifeTotal: Int, modifier: Modifier = Modifier, onLifeChange: (Int) -> Unit){
+fun PlayerCounter(
+    playerName: String,
+    lifeTotal: Int,
+    modifier: Modifier = Modifier,
+    onLifeChange: (Int) -> Unit
+) {
 
-    Column(modifier = modifier
-        .fillMaxSize()
-        .padding(8.dp),
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center)
+        verticalArrangement = Arrangement.Center
+    )
     {
 
         Text(playerName) //displaying player name on top
