@@ -33,6 +33,11 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.width
 
 class LifeTracker : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,7 +67,7 @@ class LifeTracker : ComponentActivity() {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(0xff7986cb))
+                    .background(Color(0xff424242))
             ) {
 //                uses 3 rows for players 1 and 2, a narrow row in the middle for option buttons, then another row at the bottom for players 3 and 4
                 Row(
@@ -87,6 +92,13 @@ class LifeTracker : ComponentActivity() {
                             player1Life.intValue = it
                         }
                     }
+//                    adding a box between columns to separate them visually from each other
+                    Box(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .width(4.dp)
+                            .background(Color.Black)
+                    )
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -175,6 +187,13 @@ class LifeTracker : ComponentActivity() {
                             player3Life.intValue = it
                         }
                     }
+//                    separating same as players 1 and 2
+                    Box(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .width(4.dp)
+                            .background(Color.Black)
+                    )
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -212,24 +231,55 @@ fun PlayerCounter(
     )
     {
 
-        Text(playerName) //displaying player name on top
+//        displaying player name on top in white
+        Text(
+            text = playerName,
+            color = Color.White,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold
+        )
 
         //layout done like this so the buttons for increasing and decreasing life totals are directly on either side of life total
         Row {
-            Button(onClick = {
-                onLifeChange(lifeTotal - 1)
-            }) {
-                Text("-")
+            Button(
+                onClick = {
+                    onLifeChange(lifeTotal - 1)
+                },
+                modifier = Modifier.size(64.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent,
+                    contentColor = Color.White
+                )
+            ) {
+                Text(
+                    text = "-",
+                    fontSize = 36.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
             Text(
                 text = lifeTotal.toString(),
                 fontSize = 48.sp,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier.padding(horizontal = 16.dp),
+                color = Color.White
             )
-            Button(onClick = {
-                onLifeChange(lifeTotal + 1)
-            }) {
-                Text("+")
+            Button(
+                onClick = {
+                    onLifeChange(lifeTotal + 1)
+                },
+                modifier = Modifier.size(72.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent,
+                    contentColor = Color.White
+                ),
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                Text(
+                    text = " + ",
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.Bold,
+                    lineHeight = 36.sp
+                )
             }
         }
     }

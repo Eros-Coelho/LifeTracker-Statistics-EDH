@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.background
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import android.util.Log
 
 class GameSetUp : ComponentActivity(), SensorEventListener {
 
@@ -58,6 +59,8 @@ class GameSetUp : ComponentActivity(), SensorEventListener {
     private var player4Name by mutableStateOf("")
 
     override fun onSensorChanged(event: SensorEvent?) {
+
+        Log.e("GameSetUp", "onSensorChanged called")
 
         if (event != null) { //triggers whenever an event happens
             val x = event.values[0] //getting x, y and z axis for sensor
@@ -85,6 +88,8 @@ class GameSetUp : ComponentActivity(), SensorEventListener {
                 if (players.isNotEmpty()) { //if none of the players are empty spaces, selects a random player to go first
                     firstPlayer = players.random()
                 }
+                println("Acceleration: $acceleration")
+                println(firstPlayer)
             }
         }
     }
@@ -92,25 +97,37 @@ class GameSetUp : ComponentActivity(), SensorEventListener {
     //    no need for accuracy, so this will stay empty
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
+    override fun onResume() {
+        super.onResume()
+        println("onResume called")
+
+        accelerometer?.let {
+            Log.e("GameSetUp", "Registering accelerometer listener")
+
+            sensorManager.registerListener(
+                this,
+                it,
+                SensorManager.SENSOR_DELAY_GAME
+            )
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        sensorManager.unregisterListener(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-//        val sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-//        val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-
-
-        if (accelerometer != null) {
-            sensorManager.registerListener(
-                this,
-                accelerometer,
-                SensorManager.SENSOR_DELAY_NORMAL
-            )
-        }
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
 //        testing to see if accelerometer is working
         if (accelerometer != null) {
-            println("Accelerometer working") //it is, shows on Logcat
+            Log.e("GameSetUp", "Accelerometer working") //it is, shows on Logcat
         } else {
             println("Not working :(")
         }
@@ -120,9 +137,11 @@ class GameSetUp : ComponentActivity(), SensorEventListener {
             var showShakeDialog by remember { mutableStateOf(false) } //variable to show pop up notification when needed
 
 //            box to keep everything in the centre
-            Box(modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0xFF1E1E2E))) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0xFF1E1E2E))
+            ) {
                 Column(
                     modifier = Modifier
                         .align(Alignment.Center)
