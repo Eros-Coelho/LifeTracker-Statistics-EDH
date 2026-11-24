@@ -27,8 +27,8 @@ class Statistics : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
 //            design choice same as main activity
-            Box (modifier = Modifier.fillMaxSize()) {
-                Column (
+            Box(modifier = Modifier.fillMaxSize()) {
+                Column(
                     modifier = Modifier
                         .align(Alignment.Center)
                         .offset(y = 150.dp),

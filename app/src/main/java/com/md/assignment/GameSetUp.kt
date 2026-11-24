@@ -37,6 +37,9 @@ import androidx.compose.foundation.layout.Arrangement
 
 class GameSetUp : ComponentActivity(), SensorEventListener {
 
+    private lateinit var sensorManager: SensorManager
+    private var accelerometer: Sensor? = null
+
     private val threshold = 15f //threshold to detect a substantial shake
     private var lastTimeShook = 0L //keeps last time the device was shaken
     private val cooldown =
@@ -58,11 +61,9 @@ class GameSetUp : ComponentActivity(), SensorEventListener {
             val z = event.values[2]
 
             val acceleration = sqrt(x * x + y * y + z * z) //calculating acceleration
-            println("Acceleration: $acceleration")
+            println("Acceleration: $acceleration") //debugging
 
             val currentTime = System.currentTimeMillis()
-
-//            println("X: $x, Y: $y, Z: $z")
 
 //            after detecting a shake, it will ignore other shake detections for 2 seconds
             if (acceleration > threshold && currentTime - lastTimeShook > cooldown && !shakeDetected) {
@@ -80,9 +81,6 @@ class GameSetUp : ComponentActivity(), SensorEventListener {
                 if (players.isNotEmpty()) { //if none of the players are empty spaces, selects a random player to go first
                     firstPlayer = players.random()
                 }
-
-                println("Shaking movement detected")
-                println("$firstPlayer goes first!")
             }
         }
     }
@@ -94,8 +92,8 @@ class GameSetUp : ComponentActivity(), SensorEventListener {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+//        val sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+//        val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
 
         if (accelerometer != null) {
@@ -212,6 +210,7 @@ class GameSetUp : ComponentActivity(), SensorEventListener {
                                 Text("Shake your phone to choose who goes first!")
                             }
 
+//                            button to simulate shaking on emulator
                             Button(onClick = {
                                 val players = listOf(
                                     player1Name,
@@ -220,7 +219,7 @@ class GameSetUp : ComponentActivity(), SensorEventListener {
                                     player4Name
                                 ).filter { it.isNotBlank() }
 
-                                if (players.isNotEmpty()) {
+                                if (players.isNotEmpty()) { //selects a random player to start and artificially detects a shake movement
                                     firstPlayer = players.random()
                                     shakeDetected = true
                                 }
@@ -240,14 +239,17 @@ class GameSetUp : ComponentActivity(), SensorEventListener {
                             intent.putExtra("PLAYER_3", player3Name)
                             intent.putExtra("PLAYER_4", player4Name)
 
-                            intent.putExtra("FIRST_PLAYER", firstPlayer) //passing on first player to life tracker
+                            intent.putExtra(
+                                "FIRST_PLAYER",
+                                firstPlayer
+                            ) //passing on first player to life tracker
 
                             startActivity(intent)
                         }) {
                             Text("Start the Game")
                         }
                     },
-                    dismissButton = { //dismiss button, resets the
+                    dismissButton = { //dismiss button, resets the first player and goes back to game set up
                         Button(onClick = {
                             showShakeDialog = false
                             shakeDetected = false

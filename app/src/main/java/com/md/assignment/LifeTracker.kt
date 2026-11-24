@@ -73,7 +73,7 @@ class LifeTracker : ComponentActivity() {
                     ) {
 //                        calling out the function PlayerCounter and assigning individual players' life totals to them
 //                        assigns names for players based on names provided in game set up
-                        PlayerCounter (
+                        PlayerCounter(
                             if (player1Name == firstPlayer) "$player1Name \uD83D\uDC51" else player1Name,
                             player1Life.intValue,
                             Modifier.weight(1f)
@@ -87,7 +87,7 @@ class LifeTracker : ComponentActivity() {
                             .weight(1f)
                             .rotate(270f)
                     ) {
-                        PlayerCounter (
+                        PlayerCounter(
                             if (player2Name == firstPlayer) "$player2Name \uD83D\uDC51" else player2Name,
                             player2Life.intValue,
                             Modifier.weight(1f)
@@ -134,7 +134,7 @@ class LifeTracker : ComponentActivity() {
                             .rotate(90f)
                     ) {
 //                        same logic as players 1 and 2
-                        PlayerCounter (
+                        PlayerCounter(
                             if (player3Name == firstPlayer) "$player3Name \uD83D\uDC51" else player3Name,
                             player3Life.intValue,
                             Modifier.weight(1f)
@@ -148,7 +148,7 @@ class LifeTracker : ComponentActivity() {
                             .weight(1f)
                             .rotate(270f)
                     ) {
-                        PlayerCounter (
+                        PlayerCounter(
                             if (player4Name == firstPlayer) "$player4Name \uD83D\uDC51" else player4Name,
                             player4Life.intValue,
                             Modifier.weight(1f)
