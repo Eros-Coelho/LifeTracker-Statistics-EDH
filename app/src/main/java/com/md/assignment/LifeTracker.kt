@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
 import android.view.Menu
 import android.content.Intent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
@@ -24,11 +25,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 
 class LifeTracker : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +60,9 @@ class LifeTracker : ComponentActivity() {
 
 //            no box on this activity because I needed a specific layout for the life tracker itself
             Column(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0xff7986cb))
             ) {
 //                uses 3 rows for players 1 and 2, a narrow row in the middle for option buttons, then another row at the bottom for players 3 and 4
                 Row(
@@ -100,24 +106,51 @@ class LifeTracker : ComponentActivity() {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(0.15f),
+                        .weight(0.15f)
+                        .background(Color(0xff000000)),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Button(onClick = { //ends current game and won't be added to statistics, inconclusive result
-                        finish()
-                    }) {
+                    Button(
+                        onClick = { //ends current game and won't be added to statistics, inconclusive result
+                            finish()
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xff607d8b),
+                            contentColor = Color(0xffffffff)
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
                         Text("Main Menu") //will add a "are you sure?" option later before ending the game
                     }
-                    Button(onClick = { //increases round count for both players and for statistics later
-                        round.intValue++
-                    }) {
+
+                    Button(
+                        onClick = { //increases round count for both players and for statistics later
+                            round.intValue++
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xff607d8b),
+                            contentColor = Color(0xffffffff)
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
                         Text("New Round")
                     }
 
-                    Text(text = round.intValue.toString())
+                    Text(
+                        text = round.intValue.toString(),
+                        color = Color.White,
+                        fontSize = 16.sp
+                    )
 
-                    Button(onClick = {}) { //empty for now, will add functionality to it later
+                    Button(
+                        onClick = {},
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xff607d8b),
+                            contentColor = Color(0xffffffff)
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
                         Text("End Game")
                     }
                 }

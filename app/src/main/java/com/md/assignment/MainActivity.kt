@@ -23,6 +23,13 @@ import androidx.compose.foundation.layout.offset
 import android.net.Uri
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.graphics.Color
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.font.FontWeight
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,43 +38,82 @@ class MainActivity : ComponentActivity() {
         setContent {
 //            box to make it so the buttons are shown in the centre of the screen for now
 //            will probably change the centering when I do these pages on future milestones
-            Box(modifier = Modifier.fillMaxSize()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0xFF000021))
+            ) {
                 Column( //columns with buttons linking the different activities, but only relevant ones
                     modifier = Modifier
                         .align(Alignment.Center)
                         .offset(y = 150.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    Text("Main Menu")
-                    Button(onClick = {
-                        val intent = Intent(this@MainActivity, GameSetUp::class.java)
-                        startActivity(intent)
-                    }) {
+                    Text(
+                        text = "Main Menu",
+                        color = Color.White,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Button(
+                        onClick = {
+                            val intent = Intent(this@MainActivity, GameSetUp::class.java)
+                            startActivity(intent)
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xff607d8b),
+                            contentColor = Color(0xffffffff)
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
                         Text("New Game")
                     }
-                    Button(onClick = {
-                        val intent = Intent(this@MainActivity, Statistics::class.java)
-                        startActivity(intent)
-                    }) {
+                    Button(
+                        onClick = {
+                            val intent = Intent(this@MainActivity, Statistics::class.java)
+                            startActivity(intent)
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xff607d8b),
+                            contentColor = Color(0xffffffff)
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
                         Text("View Statistics")
                     }
-//                    button leading to the EDHREC website, a popular site to see best and most used cards in the game
-                    Button(onClick = {
-                        val intent = Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse("https://edhrec.com/commanders")
-                        )
-                        startActivity(intent)
-                    }) {
-                        Text("Check Out the Most Popular Commanders!")
-                    }
 //                    some banter specific to players of the game
-                    Text("Remember")
+                    Text(
+                        text = "Remember:",
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                     Text(
                         text = "If your commander is in the Top 100 on EDHREC, you can't complain when people say you are the threat!",
                         modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
                     )
+//                    button leading to the EDHREC website, a popular site to see best and most used cards in the game
+                    Button(
+                        onClick = {
+                            val intent = Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("https://edhrec.com/commanders")
+                            )
+                            startActivity(intent)
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xff607d8b),
+                            contentColor = Color(0xffffffff)
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text("Check Out the Most Popular Commanders!")
+                    }
                 }
             }
         }

@@ -34,6 +34,10 @@ import android.hardware.SensorEventListener
 import kotlin.math.sqrt
 import androidx.compose.material3.AlertDialog
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.background
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 
 class GameSetUp : ComponentActivity(), SensorEventListener {
 
@@ -116,7 +120,9 @@ class GameSetUp : ComponentActivity(), SensorEventListener {
             var showShakeDialog by remember { mutableStateOf(false) } //variable to show pop up notification when needed
 
 //            box to keep everything in the centre
-            Box(modifier = Modifier.fillMaxSize()) {
+            Box(modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFF1E1E2E))) {
                 Column(
                     modifier = Modifier
                         .align(Alignment.Center)
@@ -124,7 +130,12 @@ class GameSetUp : ComponentActivity(), SensorEventListener {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 //                    text fields for users to enter players' names
-                    Text("Game Set Up")
+                    Text(
+                        text = "Game Set Up",
+                        color = Color.White,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                     TextField(
                         value = player1Name,
                         onValueChange = { player1Name = it },
